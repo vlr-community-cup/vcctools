@@ -1,0 +1,17 @@
+@font-face {
+    font-family: "DIN";
+    font-weight: normal;
+    src: url("/Client/Assets/Fonts/DIN-Regular.ttf");
+}
+
+@font-face {
+    font-family: "DIN";
+    font-weight: bold;
+    src: url("/Client/Assets/Fonts/DIN-Bold.ttf");
+}
+
+@font-face {
+    font-family: "Anton";
+    font-weight: normal;
+    src: url("/Client/Assets/Fonts/Anton-Regular.ttf");
+}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../Assets/Styles/bulma.min.css">
+
+    <style>
+        .map-item {
+            background-position: center;
+            background-size: cover;
+        }
+    </style>
+
+    <script src="../../Assets/Scripts/util.js"></script>
+    <script src="../../Assets/Scripts/api.js"></script>
+
+    <title>VCCTools | Control Panel</title>
+</head>
+
+<body>
+    <section class="section">
+        <div class="tile is-ancestor">
+            <div class="tile is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title">Game Info</h1>
+                    <form id="game-info-form" action="/API/Edit/Game" method="post">
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" name="title" type="text" placeholder="Game title">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" name="subtitle" type="text" placeholder="Game subtitle">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" name="length" type="text" placeholder="Game length">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" name="time" type="datetime-local" placeholder="Game time">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary" type="submit">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                    <script>
+                        document.getElementById("game-info-form").addEventListener("submit", function (event) {
+                            event.preventDefault();
+                            api.editGameInfo(formToJson("game-info-form"));
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title">Teams</h1>
+                    <form id="teams-form" action="/API/Edit/Teams" method="post">
+                        <div class="field">
+                            <div class="heading">Team A</div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" name="teamAName" type="text" placeholder="Team A name">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" name="teamACode" type="text" placeholder="Team A code">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="is-size-3 has-text-centered">VS</div>
+                        </div>
+                        <div class="field">
+                            <div class="heading">Team B</div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" name="teamBName" type="text" placeholder="Team B name">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" name="teamBCode" type="text" placeholder="Team B code">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary" type="submit">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                    <script>
+                        document.getElementById("teams-form").addEventListener("submit", function (event) {
+                            event.preventDefault();
+                            api.editTeams(formToJson("teams-form"));
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <form id="map-1" class="section map-item" style="background-image: url('/Client/Assets/Images/Maps/Ascent.jpg');">
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <div class="select">
+                        <select name="map">
+                            <option>TBD</option>
+                            <option>Ascent</option>
+                            <option>Bind</option>
+                            <option>Breeze</option>
+                            <option>Fracture</option>
+                            <option>Haven</option>
+                            <option>Icebox</option>
+                            <option>Lotus</option>
+                            <option>Pearl</option>
+                            <option>Split</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="level-item">
+                    <div class="select">
+                        <select name="team">
+                            <option value="1">Team A</option>
+                            <option value="2">Team B</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="level-item">
+                    <div class="select">
+                        <select name="type">
+                            <option value="0">Pick</option>
+                            <option value="1">Ban</option>
+                            <option value="2">Decider</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="level-item">
+                    <div class="select">
+                        <select name="side">
+                            <option value="atk">Attack</option>
+                            <option value="def">Defend</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="level-item">
+                    <button class="button is-info" type="submit">Update</button>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <button name="win" class="button is-primary set-winner">Team Win</button>
+                </div>
+                <div class="level-item">
+                    <button name="loss" class="button is-danger set-winner">Team Loss</button>
+                </div>
+                <div class="level-item">
+                    <button name="reset" class="button set-winner">Reset</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        let lastNode = document.getElementById("map-1");
+        for (let i = 2; i <= 7; i++) {
+            let duplicate = document.getElementById("map-1").cloneNode(true);
+            duplicate.id = `map-${i}`;
+            lastNode.after(duplicate);
+            lastNode = duplicate;
+        }
+
+        for (let i = 1; i <= 7; i++) {
+            let formId = `#map-${i}`;
+            document.querySelector(formId).addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                let map = document.querySelector(formId + " select[name=map]").value;
+                let team = parseInt(document.querySelector(formId + " select[name=team]").value);
+                let type = parseInt(document.querySelector(formId + " select[name=type]").value);
+                let defendingTeam = document.querySelector(formId + " select[name=side]").value == "def" ? team : flipTeam(team);
+                let pick = {
+                    map,
+                    team,
+                    type,
+                    defendingTeam
+                };
+
+                api.editMapPick(i - 1, pick);
+            });
+            document.querySelectorAll(formId + " .set-winner").forEach(button => {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    api.editMapWinner(i - 1, parseInt(button.dataset.team));
+                });
+            });
+        }
+    </script>
+
+    <script>
+        api.onDataUpdate((state) => {
+            document.querySelector("input[name=title]").value = state.game.title;
+            document.querySelector("input[name=subtitle]").value = state.game.subtitle;
+            document.querySelector("input[name=length]").value = state.game.length;
+            document.querySelector("input[name=time]").value = state.game.time;
+
+            document.querySelector("input[name=teamAName]").value = state.teamA.name;
+            document.querySelector("input[name=teamACode]").value = state.teamA.code;
+            document.querySelector("input[name=teamBName]").value = state.teamB.name;
+            document.querySelector("input[name=teamBCode]").value = state.teamB.code;
+
+            for (let i = 0; i < 7; i++) {
+                let formId = `#map-${i + 1}`;
+
+                let map = state.mapSeries[i].map ?? "TBD";
+                let team = state.mapSeries[i].team == 0 ? "1" : state.mapSeries[i].team.toString();
+                let type;
+                if (state.mapSeries[i].isPick)
+                    type = "0"
+                if (state.mapSeries[i].isBan)
+                    type = "1"
+                if (state.mapSeries[i].isDecider)
+                    type = "2"
+                let side = state.mapSeries[i].defendingTeam == state.mapSeries[i].team ? "def" : "atk";
+
+                document.querySelector(formId + " select[name=map]").value = map;
+                document.querySelector(formId + " select[name=team]").value = team;
+                document.querySelector(formId + " select[name=type]").value = type;
+                document.querySelector(formId + " select[name=side]").value = side;
+                document.querySelector(formId).style.backgroundImage = `url('/Client/Assets/Images/Maps/${map}.jpg')`;
+
+                if (state.mapSeries[i].winningTeam == 0) {
+                    document.querySelector(formId + " button[name=win]").style.display = "flex";
+                    document.querySelector(formId + " button[name=loss]").style.display = "flex";
+                    document.querySelector(formId + " button[name=reset]").style.display = "none";
+                } else {
+                    document.querySelector(formId + " button[name=win]").style.display = "none";
+                    document.querySelector(formId + " button[name=loss]").style.display = "none";
+                    document.querySelector(formId + " button[name=reset]").style.display = "flex";
+                    document.querySelector(formId + " button[name=reset]").innerHTML =
+                        state.mapSeries[i].winningTeam == state.mapSeries[i].team ? "Team Win | Reset" : "Team Loss | Reset";
+                }
+
+                document.querySelector(formId + " button[name=win]").dataset.team = state.mapSeries[i].team;
+                document.querySelector(formId + " button[name=loss]").dataset.team = flipTeam(state.mapSeries[i].team);
+                document.querySelector(formId + " button[name=reset]").dataset.team = 0;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../Assets/Styles/global.css">
+    <link rel="stylesheet" href="../Assets/Styles/fonts.css">
+
+    <style>
+        .container-card {
+            width: 80%;
+            height: 80%;
+            display: grid;
+            grid-template-rows: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .header-half {
+            padding: 0 2rem;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .header-left {
+            /* Take up first row (header) */
+            grid-row: 1 / 2;
+            /* Take up left half */
+            grid-column: 1 / 3;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .header-right {
+            /* Take up first row (header) */
+            grid-row: 1 / 2;
+            /* Take up right half */
+            grid-column: 3 / 5;
+            justify-content: flex-end;
+            text-align: right;
+        }
+
+        .main-area {
+            /* Take up majority of vertical space */
+            grid-row: 2 / 5;
+            /* Extend horizontally */
+            grid-column: 1 / 5;
+            display: grid;
+            grid-template-columns: 4fr 2fr 4fr;
+        }
+
+        .team-half {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .team-left {
+            align-items: flex-end;
+            text-align: right;
+        }
+
+        .score-center {
+            align-items: center;
+            text-align: center;
+        }
+
+        .team-right {
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .footer {
+            /* Take up last row (footer) */
+            grid-row: 5 / 6;
+            /* Extend horizontally */
+            grid-column: 1 / 5;
+            padding: 0 7rem;
+        }
+    </style>
+
+    <script src="../Assets/Scripts/lib/signalr.min.js"></script>
+    <script src="../Assets/Scripts/api.js"></script>
+    <script src="../Assets/Scripts/events.js"></script>
+
+    <title>VCCTools | Match Overview</title>
+</head>
+
+<body>
+    <audio src="../Assets/Audio/intermission_music.mp3" autoplay="true"></audio>
+    <div class="root flex-center">
+        <div class="container-card bg-light card-shadow">
+            <div class="header-half header-left">
+                <img id="game-logo" style="height: 7rem; display: block;" src="..//Assets/Images/vcc-logo.png">
+                <div>
+                    <div id="game-title" class="text-2 text-bold text-accent">GAME TITLE HERE</div>
+                    <div id="game-subtitle" class="text-2 text-dark">GAME SUBTITLE HERE</div>
+                </div>
+            </div>
+            <div class="header-half header-right">
+                <div>
+                    <div id="game-time-alpha" class="text-2 text-dark">GAME TIME ALPHA HERE</div>
+                    <div id="game-time-bravo" class="text-2 text-dark">GAME TIME BRAVO HERE</div>
+                </div>
+            </div>
+            <div class="main-area">
+                <div id="team-left" class="team-half team-left">
+                    <div id="team-a-code" class="text-headline text-5 text-accent">CODE</div>
+                    <div id="team-a-name" class="text-2 text-dark">Team Name</div>
+                </div>
+                <div id="score" class="team-half score-center">
+                    <div class="text-1-5 text-accent">LIVE</div>
+                    <div class="text-headline text-6 text-dark">
+                        <span id="team-a-score">-</span> : <span id="team-b-score">-</span>
+                    </div>
+                    <div id="series-length" class="text-1-5 text-dark">LENGTH</div>
+                </div>
+                <div id="team-right" class="team-half team-right">
+                    <div id="team-b-code" class="text-headline text-5 text-accent">CODE</div>
+                    <div id="team-b-name" class="text-2 text-dark">Team Name</div>
+                </div>
+            </div>
+            <div id="map-vetos" class="footer flex-center text-1-5 text-dark">
+                Starting soon
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const message = new URLSearchParams(window.location.search).get('message');
+        document.getElementById("map-vetos").innerHTML = message;
+
+        api.onDataUpdate((state) => {
+            document.getElementById("game-title").innerHTML = state.game.title;
+            document.getElementById("game-subtitle").innerHTML = state.game.subtitle;
+
+            let date = new Date(state.game.time).toDateString();
+            let time = new Date(state.game.time).toLocaleTimeString([], { hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+            document.getElementById("game-time-alpha").innerHTML = date;
+            document.getElementById("game-time-bravo").innerHTML = time;
+
+            document.getElementById("team-a-name").innerHTML = state.teamA.name;
+            document.getElementById("team-a-code").innerHTML = state.teamA.code;
+
+            document.getElementById("team-b-name").innerHTML = state.teamB.name;
+            document.getElementById("team-b-code").innerHTML = state.teamB.code;
+
+            document.getElementById("team-a-score").innerHTML = state.teamA.score;
+            document.getElementById("team-b-score").innerHTML = state.teamB.score;
+
+            document.getElementById("series-length").innerHTML = state.game.length;
+        });
+    </script>
+</body>
+
+</html>
