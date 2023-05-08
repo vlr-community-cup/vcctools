@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/Client/Assets/Styles/global.css">
+    <link rel="stylesheet" href="/Client/Assets/Styles/fonts.css">
+    <script src="/Client/Assets/Scripts/lib/signalr.min.js"></script>
+    <script src="/Client/Assets/Scripts/client.js"></script>
+    <script src="/Client/Assets/Scripts/binder.js"></script>
+    <script src="/Client/Assets/Scripts/util.js"></script>
+    <style>
+        .root>video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 35%;
+            background-color: rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+        }
+    </style>
+    <title>VCCTools | Up Next</title>
+</head>
+
+<body>
+    <div class="root flex-center">
+        <video src="/Client/Assets/Videos/Maps/TBD.mp4" autoplay loop muted></video>
+        <div class="container flex-center">
+            <div class="text-2 text-light">UP NEXT</div>
+            <div id="map-name" class="text-8 text-headline text-light" style="line-height: 10rem;">ASCENT</div>
+        </div>
+    </div>
+    <script>
+        binder.bindCustom("mapSeries", mapSeries => {
+            var nextMap = util.getNextMap(mapSeries);
+            document.querySelector("video").src = "/Client/Assets/Videos/Maps/" + nextMap.map + ".mp4";
+            document.querySelector("#map-name").innerHTML = nextMap.map;
+        });
+    </script>
+</body>
+
+</html>

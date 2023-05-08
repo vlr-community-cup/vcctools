@@ -18,7 +18,7 @@ public class Program
         
         app.MapControllers();
         app.MapHub<EventHub>("/Events");
-        app.UseContent();
+        app.UseClient();
 
         app.Run();
     }

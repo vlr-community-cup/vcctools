@@ -20,12 +20,12 @@ public class EditController : ControllerBase
     }
 
     [HttpPost("Game")]
-    public async Task<IActionResult> EditGameInfo([FromBody] GameInfo gameInfo)
+    public async Task<IActionResult> EditGameInfo([FromBody] GameInfoEditRequest editRequest)
     {
-        _dataService.Game.Title = gameInfo.Title;
-        _dataService.Game.Subtitle = gameInfo.Subtitle;
-        _dataService.Game.Length = gameInfo.Length;
-        _dataService.Game.Time = gameInfo.Time;
+        _dataService.Game.Title = editRequest.Title;
+        _dataService.Game.Subtitle = editRequest.Subtitle;
+        _dataService.Game.Length = editRequest.Length;
+        _dataService.Game.Time = editRequest.Time;
 
         await _hubContext.Clients.All.SendAsync("DataDidUpdate");
 
@@ -33,12 +33,25 @@ public class EditController : ControllerBase
     }
 
     [HttpPost("Teams")]
-    public async Task<IActionResult> EditTeamInfo([FromBody] TeamInfo teamInfo)
+    public async Task<IActionResult> EditTeamInfo([FromBody] TeamInfoEditRequest editRequest)
     {
-        _dataService.TeamA.Name = teamInfo.TeamAName;
-        _dataService.TeamA.Code = teamInfo.TeamACode;
-        _dataService.TeamB.Name = teamInfo.TeamBName;
-        _dataService.TeamB.Code = teamInfo.TeamBCode;
+        _dataService.TeamA.Name = editRequest.TeamAName;
+        _dataService.TeamA.Code = editRequest.TeamACode;
+        _dataService.TeamB.Name = editRequest.TeamBName;
+        _dataService.TeamB.Code = editRequest.TeamBCode;
+
+        await _hubContext.Clients.All.SendAsync("DataDidUpdate");
+
+        return NoContent();
+    }
+
+    [HttpGet("Map/Current/{index}")]
+    public async Task<IActionResult> EditCurrentMapIndex([FromRoute] int index)
+    {
+        if (index >= _dataService.MapSeries.Count)
+            return BadRequest();
+
+        _dataService.CurrentMapIndex = index;
 
         await _hubContext.Clients.All.SendAsync("DataDidUpdate");
 
@@ -46,24 +59,24 @@ public class EditController : ControllerBase
     }
 
     [HttpPost("Map/{index}")]
-    public async Task<IActionResult> EditMapPick([FromRoute] int index, [FromBody] MapPickEdit mapPickEdit)
+    public async Task<IActionResult> EditMapPick([FromRoute] int index, [FromBody] MapPickEditRequest editRequest)
     {
         var mapPick = _dataService.MapSeries[index];
-        mapPick.Map = mapPickEdit.Map;
-        mapPick.Team = mapPickEdit.Team;
-        mapPick.Type = mapPickEdit.Type;
-        mapPick.DefendingTeam = mapPickEdit.DefendingTeam;
+        mapPick.Map = editRequest.Map;
+        mapPick.Team = editRequest.Team;
+        mapPick.Type = editRequest.Type;
+        mapPick.IsAttacking = editRequest.IsAttacking;
 
         await _hubContext.Clients.All.SendAsync("DataDidUpdate");
 
         return NoContent();
     }
 
-    [HttpGet("Map/{index}/{teamId}")]
-    public async Task<IActionResult> EditMapWinner([FromRoute] int index, [FromRoute] TeamId teamId)
+    [HttpGet("Map/{index}/{result}")]
+    public async Task<IActionResult> EditMapPickResult([FromRoute] int index, [FromRoute] MapPickResult result)
     {
         var mapPick = _dataService.MapSeries[index];
-        mapPick.WinningTeam = teamId;
+        mapPick.Result = result;
 
         await _hubContext.Clients.All.SendAsync("DataDidUpdate");
 

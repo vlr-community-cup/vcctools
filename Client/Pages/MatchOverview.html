@@ -5,12 +5,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="../Assets/Styles/global.css">
-    <link rel="stylesheet" href="../Assets/Styles/fonts.css">
-
+    <link rel="stylesheet" href="/Client/Assets/Styles/global.css">
+    <link rel="stylesheet" href="/Client/Assets/Styles/fonts.css">
+    <script src="/Client/Assets/Scripts/lib/signalr.min.js"></script>
+    <script src="/Client/Assets/Scripts/client.js"></script>
+    <script src="/Client/Assets/Scripts/binder.js"></script>
+    <script src="/Client/Assets/Scripts/util.js"></script>
     <style>
+        .root > video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+
         .container-card {
+            position: relative;
             width: 80%;
             height: 80%;
             display: grid;
@@ -81,78 +92,59 @@
             padding: 0 7rem;
         }
     </style>
-
-    <script src="../Assets/Scripts/lib/signalr.min.js"></script>
-    <script src="../Assets/Scripts/api.js"></script>
-    <script src="../Assets/Scripts/events.js"></script>
-
     <title>VCCTools | Match Overview</title>
 </head>
 
 <body>
-    <audio src="../Assets/Audio/intermission_music.mp3" autoplay="true"></audio>
+    <audio src="/Client/Assets/Audio/intermission_music.mp3" autoplay loop></audio>
     <div class="root flex-center">
+        <video src="/Client/Assets/Videos/intermission_bg.mp4" autoplay loop muted></video>
         <div class="container-card bg-light card-shadow">
             <div class="header-half header-left">
-                <img id="game-logo" style="height: 7rem; display: block;" src="..//Assets/Images/vcc-logo.png">
+                <img style="height: 7rem; display: block;" src="/Client/Assets/Images/vcc-logo.png">
                 <div>
-                    <div id="game-title" class="text-2 text-bold text-accent">GAME TITLE HERE</div>
-                    <div id="game-subtitle" class="text-2 text-dark">GAME SUBTITLE HERE</div>
+                    <div class="text-2 text-bold text-accent" data-bind-property="game.title" data-bind-type="html">TBD
+                    </div>
+                    <div class="text-2 text-dark" data-bind-property="game.subtitle" data-bind-type="html">TBD</div>
                 </div>
             </div>
             <div class="header-half header-right">
                 <div>
-                    <div id="game-time-alpha" class="text-2 text-dark">GAME TIME ALPHA HERE</div>
-                    <div id="game-time-bravo" class="text-2 text-dark">GAME TIME BRAVO HERE</div>
+                    <div class="text-2 text-dark" data-bind-property="game.time" data-bind-type="date-html">TBD</div>
+                    <div class="text-2 text-dark" data-bind-property="game.time" data-bind-type="time-html">TBD</div>
                 </div>
             </div>
             <div class="main-area">
-                <div id="team-left" class="team-half team-left">
-                    <div id="team-a-code" class="text-headline text-5 text-accent">CODE</div>
-                    <div id="team-a-name" class="text-2 text-dark">Team Name</div>
+                <div class="team-half team-left">
+                    <div class="text-headline text-5 text-accent" data-bind-property="teamA.code" data-bind-type="html">
+                        TBD</div>
+                    <div class="text-2 text-dark" data-bind-property="teamA.name" data-bind-type="html">TBD</div>
                 </div>
-                <div id="score" class="team-half score-center">
+                <div class="team-half score-center">
                     <div class="text-1-5 text-accent">LIVE</div>
                     <div class="text-headline text-6 text-dark">
-                        <span id="team-a-score">-</span> : <span id="team-b-score">-</span>
+                        <span data-bind-property="1" data-bind-type="score">-</span>
+                        :
+                        <span data-bind-property="2" data-bind-type="score">-</span>
                     </div>
-                    <div id="series-length" class="text-1-5 text-dark">LENGTH</div>
+                    <div class="text-1-5 text-dark" data-bind-property="game.length" data-bind-type="html">TBD</div>
                 </div>
-                <div id="team-right" class="team-half team-right">
-                    <div id="team-b-code" class="text-headline text-5 text-accent">CODE</div>
-                    <div id="team-b-name" class="text-2 text-dark">Team Name</div>
+                <div class="team-half team-right">
+                    <div class="text-headline text-5 text-accent" data-bind-property="teamB.code" data-bind-type="html">
+                        TBD</div>
+                    <div class="text-2 text-dark" data-bind-property="teamB.name" data-bind-type="html">TBD</div>
                 </div>
             </div>
-            <div id="map-vetos" class="footer flex-center text-1-5 text-dark">
-                Starting soon
+            <div id="message" class="footer flex-center text-1-5 text-dark">
+                TBD
             </div>
         </div>
     </div>
 
     <script>
         const message = new URLSearchParams(window.location.search).get('message');
-        document.getElementById("map-vetos").innerHTML = message;
-
-        api.onDataUpdate((state) => {
-            document.getElementById("game-title").innerHTML = state.game.title;
-            document.getElementById("game-subtitle").innerHTML = state.game.subtitle;
-
-            let date = new Date(state.game.time).toDateString();
-            let time = new Date(state.game.time).toLocaleTimeString([], { hour: "numeric", minute: "2-digit", timeZoneName: "short" });
-            document.getElementById("game-time-alpha").innerHTML = date;
-            document.getElementById("game-time-bravo").innerHTML = time;
-
-            document.getElementById("team-a-name").innerHTML = state.teamA.name;
-            document.getElementById("team-a-code").innerHTML = state.teamA.code;
-
-            document.getElementById("team-b-name").innerHTML = state.teamB.name;
-            document.getElementById("team-b-code").innerHTML = state.teamB.code;
-
-            document.getElementById("team-a-score").innerHTML = state.teamA.score;
-            document.getElementById("team-b-score").innerHTML = state.teamB.score;
-
-            document.getElementById("series-length").innerHTML = state.game.length;
-        });
+        document.getElementById("message").innerHTML = message;
+        binder.autoBind();
     </script>
 </body>
 

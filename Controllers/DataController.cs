@@ -18,13 +18,14 @@ public class DataController : ControllerBase
     [HttpGet]
     public DataBundle GetDataBundle()
     {
-        var bundle = new DataBundle(
-            _dataService.Game,
-            _dataService.TeamA,
-            _dataService.TeamB,
-            _dataService.MapSeries,
-            _dataService.CurrentMap
-        );
+        var bundle = new DataBundle
+        {
+            Game = _dataService.Game,
+            TeamA = _dataService.TeamA,
+            TeamB = _dataService.TeamB,
+            MapSeries = _dataService.MapSeries,
+            CurrentMapIndex = _dataService.CurrentMapIndex
+        };
         return bundle;
     }
 }

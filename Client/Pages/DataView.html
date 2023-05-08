@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/Client/Assets/Styles/bulma.min.css">
+    <script src="/Client/Assets/Scripts/lib/signalr.min.js"></script>
+    <script src="/Client/Assets/Scripts/client.js"></script>
+    <script src="/Client/Assets/Scripts/binder.js"></script>
+    <script src="/Client/Assets/Scripts/util.js"></script>
+    <title>VCCTools | Data View</title>
+</head>
+
+<body>
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h1 class="title">Data View</h1>
+            <table id="data-table" class="table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Game Title</td>
+                        <td data-bind-property="game.title" data-bind-type="html">TBD</td>
+                    </tr>
+                    <tr>
+                        <td>Game Subtitle</td>
+                        <td data-bind-property="game.subtitle" data-bind-type="html">TBD</td>
+                    </tr>
+                    <tr>
+                        <td>Game Date</td>
+                        <td data-bind-property="game.time" data-bind-type="date-html">TBD</td>
+                    </tr>
+                    <tr>
+                        <td>Game Time</td>
+                        <td data-bind-property="game.time" data-bind-type="time-html">TBD</td>
+                    </tr>
+                    <tr>
+                        <td>Game Length</td>
+                        <td data-bind-property="game.length" data-bind-type="html">TBD</td>
+                    </tr>
+                    <tr>
+                        <td>Team A Name</td>
+                        <td data-bind-property="teamA.name" data-bind-type="html">TBD</td>
+                    </tr>
+                    <tr>
+                        <td>Team A Code</td>
+                        <td data-bind-property="teamA.code" data-bind-type="html">TBD</td>
+                    </tr>
+                    <tr>
+                        <td>Team B Name</td>
+                        <td data-bind-property="teamB.name" data-bind-type="html">TBD</td>
+                    </tr>
+                    <tr>
+                        <td>Team B Code</td>
+                        <td data-bind-property="teamB.code" data-bind-type="html">TBD</td>
+                    </tr>
+                    <tr>
+                        <td>Current Map Index</td>
+                        <td data-bind-property="currentMapIndex" data-bind-type="html">TBD</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <script>
+        const dataTable = document.querySelector("#data-table");
+        let createdTableRows = [];
+
+        binder.autoBind();
+
+        client.onDataDidUpdate((data) => {
+            createdTableRows.forEach(row => {
+                dataTable.deleteRow(row.rowIndex);
+            });
+            createdTableRows = [];
+            for (var i = 1; i <= data.mapSeries.length; i++) {
+                var row = dataTable.insertRow();
+                var propCell = row.insertCell();
+                var valCell = row.insertCell();
+                propCell.innerHTML = `Map ${i}`;
+                valCell.innerHTML = util.getMapPickString(data.mapSeries[i - 1], data.teamA.code, data.teamB.code);
+                createdTableRows.push(row);
+            }
+        });
+    </script>
+</body>
+
+</html>

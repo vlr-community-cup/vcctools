@@ -5,27 +5,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="/Content/Assets/Styles/global.css">
-    <link rel="stylesheet" href="/Content/Assets/Styles/fonts.css">
-
-    <style>
-    </style>
-
-    <script src="/Content/Assets/Scripts/api.js"></script>
-    <script>
-        window.API_MOCKING = true;
-    </script>
-
+    <link rel="stylesheet" href="/Client/Assets/Styles/global.css">
+    <link rel="stylesheet" href="/Client/Assets/Styles/fonts.css">
+    <script src="/Client/Assets/Scripts/lib/signalr.min.js"></script>
+    <script src="/Client/Assets/Scripts/client.js"></script>
+    <script src="/Client/Assets/Scripts/binder.js"></script>
+    <script src="/Client/Assets/Scripts/util.js"></script>
     <title>VCCTools | Map B-Roll</title>
 </head>
 
 <body>
-    <div class="root flex-center">
-        <video src="/assets/videos/maps/Generic.mp4" class="fill-parent" autoplay loop muted></video>
-    </div>
-
+    <video class="root" src="/Client/Assets/Videos/Maps/TBD.mp4" autoplay loop muted></video>
     <script>
+        binder.bindCustom("mapSeries", mapSeries => {
+            var nextMap = util.getNextMap(mapSeries);
+            console.log(nextMap);
+            document.querySelector("video").src = "/Client/Assets/Videos/Maps/" + nextMap.map + ".mp4";
+        });
     </script>
 </body>
 

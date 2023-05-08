@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/Client/Assets/Styles/global.css">
+    <link rel="stylesheet" href="/Client/Assets/Styles/fonts.css">
+    <script src="/Client/Assets/Scripts/lib/signalr.min.js"></script>
+    <script src="/Client/Assets/Scripts/client.js"></script>
+    <script src="/Client/Assets/Scripts/binder.js"></script>
+    <script src="/Client/Assets/Scripts/util.js"></script>
+    <style>
+        .root {
+            /* background-image: url("/Client/Assets/Images/ref.jpeg"); */
+            background-size: contain;
+            background-position: center;
+        }
+
+        .game-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 25%;
+            height: 18%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 2rem;
+            overflow: hidden;
+        }
+
+        .game-info>img {
+            position: absolute;
+            top: -42%;
+            left: 10%;
+            width: 80%;
+            opacity: 0.1;
+        }
+
+        .game-info>div {
+            position: relative;
+        }
+
+        .game-info > .spanner {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0.6rem;            
+        }
+    </style>
+    <title>VCCTools | Game Overlay</title>
+</head>
+
+<body>
+    <div class="root">
+        <div class="game-info bg-light">
+            <img src="/Client/Assets/Images/vcc-logo.png">
+            <div class="text-2 text-bold text-accent" data-bind-property="game.title" data-bind-type="html">TBD</div>
+            <div class="text-2" data-bind-property="game.subtitle" data-bind-type="html">TBD</div>
+            <div class="spanner bg-accent"></div>
+        </div>
+    </div>
+
+    <script>
+        binder.autoBind();
+    </script>
+</body>
+
+</html>
